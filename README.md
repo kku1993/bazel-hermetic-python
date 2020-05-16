@@ -34,4 +34,5 @@ Bazel python executable is /home/kku/.cache/bazel/_bazel_kku/d727175bc5d0ccda8e0
 Bazel python version is 3.8.3
 Host python executable is /usr/bin/python3
 Host python version is 3.6.9
+Successfully imported psycopg2-binary!
 ```

@@ -24,6 +24,6 @@ toolchain(
 py_binary(
     name = "main",
     srcs = ["main.py"],
-    deps = [requirement("python-baseconv")],
+    deps = [requirement("psycopg2-binary")],
     python_version = "PY3",
 )
