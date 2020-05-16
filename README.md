@@ -23,12 +23,15 @@ Advantages of this approach:
 
 # Demo
 
-Running on Ubuntu 18.04.4 with default python3 version being 3.6.9:
+Environment:
+- Ubuntu 18.04.4
+- Host python3 version: 3.6.9
+- Bazel version: 2.2.0
 
 ```shell
 $ bazel run //:main
-My python executable is /home/kku/.cache/bazel/_bazel_kku/d727175bc5d0ccda8e0f97f510a8a329/execroot/py_test/bazel-out/k8-fastbuild/bin/main.runfiles/python_interpreter/python
-My python version is 3.8.3
-The host's python executable is b'/usr/bin/python3\n'
-The host's python version is b'Python 3.6.9\n'
+Bazel python executable is /home/kku/.cache/bazel/_bazel_kku/d727175bc5d0ccda8e0f97f510a8a329/execroot/py_test/bazel-out/k8-fastbuild/bin/main.runfiles/python_interpreter/python_bin
+Bazel python version is 3.8.3
+Host python executable is /usr/bin/python3
+Host python version is 3.6.9
 ```
