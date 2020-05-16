@@ -3,6 +3,16 @@ workspace(name="py_test")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+# Special logic for building python interpreter with OpenSSL from homebrew.
+# See https://devguide.python.org/setup/#macos-and-os-x
+_py_configure = """
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    ./configure --prefix=$(pwd)/bazel_install --with-openssl=$(brew --prefix openssl)
+else
+    ./configure --prefix=$(pwd)/bazel_install
+fi
+"""
+
 http_archive(
     name = "python_interpreter",
     urls = ["https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tar.xz"],
@@ -10,7 +20,7 @@ http_archive(
     strip_prefix = "Python-3.8.3",
     patch_cmds = [
         "mkdir $(pwd)/bazel_install",
-        "./configure --prefix=$(pwd)/bazel_install",
+        _py_configure,
         "make",
         "make install",
         "ln -s bazel_install/bin/python3 python_bin",

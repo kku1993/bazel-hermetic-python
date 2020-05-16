@@ -21,6 +21,19 @@ Advantages of this approach:
 1. Configure `pip_import` to use our custom interpreter to ensure the
    imported packages are compatible.
 
+# Note for macOS
+
+In order to build python with SSL support, this demo assumes that you have
+installed `openssl` via `homebrew`. If not, you'll likely get this error from
+`pip_import`:
+
+```
+pip Can't connect to HTTPS URL because the SSL module is not available.
+```
+
+For more information, see
+[https://devguide.python.org/setup/#macos-and-os-x](https://devguide.python.org/setup/#macos-and-os-x).
+
 # Demo
 
 Environment:
