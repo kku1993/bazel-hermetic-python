@@ -31,7 +31,7 @@ register_toolchains("//:my_py_toolchain")
 # TODO: change to upstream repo
 git_repository(
     name = "rules_python",
-    remote = "git@github.com:kku1993/rules_python.git",
+    remote = "https://github.com/kku1993/rules_python.git",
     commit = "262fbbe5e53e75776cb8ac0df7c99bbc2c1cf668",
 )
 

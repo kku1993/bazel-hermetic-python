@@ -12,13 +12,13 @@ Advantages of this approach:
 
 # Explanation
 
-1. We download and build python 3.8.3 interpreter from source using
+1. Download and build python 3.8.3 interpreter from source using
   `http_archive` in `WORKSPACE`.
-1. We create `py_runtime` and `toolchain` in `BUILD.bazel` to use the python
+1. Create `py_runtime` and `toolchain` in `BUILD.bazel` to use the python
    3.8.3 interpreter we've just built.
-1. We register the toolchain in `WORKSPACE` such that all python targets
+1. Register the toolchain in `WORKSPACE` such that all python targets
    automatically use our custom interpreter.
-1. We configure `pip_import` to use our custom interpreter to ensure the
+1. Configure `pip_import` to use our custom interpreter to ensure the
    imported packages are compatible.
 
 # Demo
