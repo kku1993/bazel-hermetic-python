@@ -13,16 +13,14 @@ http_archive(
         "./configure --prefix=$(pwd)/bazel_install",
         "make",
         "make install",
-        # On macOS case-insensitive filesystems and windows, the binary is
-        # called python.exe instead of python.
-        "mv python.exe python || true",
+        "ln -s bazel_install/bin/python3 python_bin",
     ],
     build_file_content = """
-exports_files(["python"])
+exports_files(["python_bin"])
 
 filegroup(
     name = "files",
-    srcs = glob(["**"], exclude = ["**/* *", "python"]),
+    srcs = glob(["bazel_install/**"], exclude = ["**/* *"]),
     visibility = ["//visibility:public"],
 )
 """,
@@ -50,7 +48,7 @@ load("@rules_python//python:pip.bzl", "pip_import")
 pip_import(
     name = "py_deps",
     requirements = "//:requirements.txt",
-    python_interpreter_target = "@python_interpreter//:python",
+    python_interpreter_target = "@python_interpreter//:python_bin",
 )
 
 load("@py_deps//:requirements.bzl", "pip_install")
