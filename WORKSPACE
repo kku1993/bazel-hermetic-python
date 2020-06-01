@@ -36,8 +36,6 @@ filegroup(
 """,
 )
 
-register_toolchains("//:my_py_toolchain")
-
 # TODO: change to upstream repo
 git_repository(
     name = "rules_python",
@@ -64,3 +62,52 @@ pip_import(
 load("@py_deps//:requirements.bzl", "pip_install")
 
 pip_install()
+
+####################
+# rules_docker
+####################
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "io_bazel_rules_docker",
+    sha256 = "3efbd23e195727a67f87b2a04fb4388cc7a11a0c0c2cf33eec225fb8ffbb27ea",
+    strip_prefix = "rules_docker-0.14.2",
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.14.2/rules_docker-v0.14.2.tar.gz"],
+)
+
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
+container_repositories()
+
+load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
+
+container_deps()
+
+load(
+    "@io_bazel_rules_docker//container:container.bzl",
+    "container_pull",
+)
+
+# Python image version must match the python interpreter version in
+# @python_interpreter http_archive in order for dependencies imported by
+# pip_import to have the right version.
+container_pull(
+    name = "python3.8.3_slim_buster",
+    registry = "docker.io",
+    repository = "library/python",
+    digest = "sha256:bad43dc620ed7f3bc085782b63c6cc0f307819af41b0ebfecb8457c82abc7f99",  # 3.8.3-slim-buster
+)
+
+load("@io_bazel_rules_docker//python3:image.bzl", _py3_image_repos = "repositories")
+
+_py3_image_repos()
+
+# Our custom python toolchain must be registered at the end in order for python
+# container images built with @python3.8.3_slim_buster as the base to use the
+# "host" toolchain rather than the one with our locally compiled interpreter.
+# See:
+# https://docs.bazel.build/versions/master/toolchains.html#toolchain-resolution
+register_toolchains("//:my_py_toolchain")

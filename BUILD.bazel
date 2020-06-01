@@ -1,3 +1,5 @@
+load("@io_bazel_rules_docker//container:image.bzl", "container_image")
+load("@io_bazel_rules_docker//python3:image.bzl", "py3_image")
 load("@py_deps//:requirements.bzl", "requirement")
 load("@rules_python//python:defs.bzl", "py_runtime_pair")
 
@@ -26,4 +28,34 @@ py_binary(
     srcs = ["main.py"],
     deps = [requirement("psycopg2-binary")],
     python_version = "PY3",
+)
+
+####################
+# Docker Image
+####################
+
+container_image(
+    name = "python3.8.3_base_image",
+    base = "@python3.8.3_slim_buster//image",
+    # slim-buster image places python3 under /usr/local/bin, but the host
+    # toolchain used by py3_image might use /usr/bin instead.
+    symlinks = {
+        "/usr/bin/python": "/usr/local/bin/python",
+        "/usr/bin/python3": "/usr/local/bin/python3",
+    },
+    stamp = True,
+    creation_time = "{BUILD_TIMESTAMP}",
+)
+
+py3_image(
+    name = "main_image",
+    srcs = ["main.py"],
+    main = "main.py",
+    deps = [requirement("psycopg2-binary")],
+
+    base = ":python3.8.3_base_image",
+
+    # Bazel injected init files can break python import.
+    # https://github.com/bazelbuild/rules_python/issues/55
+    legacy_create_init = False,
 )
