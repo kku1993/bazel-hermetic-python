@@ -36,11 +36,10 @@ filegroup(
 """,
 )
 
-# TODO: change to upstream repo
 git_repository(
     name = "rules_python",
-    remote = "https://github.com/kku1993/rules_python.git",
-    commit = "54d397fac0d8351398f54db0bc23a83ebb5ed868",
+    remote = "https://github.com/bazelbuild/rules_python.git",
+    commit = "06672cd470ce513a256c7ef2dbb8497a0f5502f3",
 )
 
 load("@rules_python//python:repositories.bzl", "py_repositories")
