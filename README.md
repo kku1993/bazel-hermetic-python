@@ -29,6 +29,12 @@ Host python version is 3.6.9
 Successfully imported psycopg2-binary!
 ```
 
+# py_test demo
+
+```
+bazel test //:main_test
+```
+
 # Docker Image Demo
 
 The image we're using is `python3:3.8.3-slim-buster`, which matches the python

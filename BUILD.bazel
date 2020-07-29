@@ -30,6 +30,20 @@ py_binary(
     python_version = "PY3",
 )
 
+py_test(
+    name = "main_test",
+    srcs = ["main_test.py"],
+    deps = [
+        requirement("attrs"),
+        requirement("more-itertools"),
+        requirement("packaging"),
+        requirement("pluggy"),
+        requirement("py"),
+        requirement("pytest"),
+        requirement("wcwidth"),
+    ],
+)
+
 ####################
 # Docker Image
 ####################
