@@ -1,6 +1,8 @@
 load("@io_bazel_rules_docker//container:image.bzl", "container_image")
+load("@io_bazel_rules_docker//docker/util:run.bzl", "container_run_and_commit")
 load("@io_bazel_rules_docker//python3:image.bzl", "py3_image")
 load("@py_deps//:requirements.bzl", "requirement")
+load("@rules_pkg//:pkg.bzl", "pkg_tar")
 load("@rules_python//python:defs.bzl", "py_runtime_pair")
 
 py_runtime(
@@ -48,9 +50,20 @@ py_test(
 # Docker Image
 ####################
 
+# Package requirements.txt into a tar so we can load it into the container
+# image.
+pkg_tar(
+    name = "py_requirements",
+    package_dir = "/etc",
+    srcs = ["//:requirements.txt"],
+    mode = "0644",
+    visibility = ["//visibility:private"],
+)
+
 container_image(
     name = "python3.8.3_base_image",
     base = "@python3.8.3_slim_buster//image",
+    tars = [":py_requirements"],
     # slim-buster image places python3 under /usr/local/bin, but the host
     # toolchain used by py3_image might use /usr/bin instead.
     symlinks = {
@@ -61,13 +74,25 @@ container_image(
     creation_time = "{BUILD_TIMESTAMP}",
 )
 
+# Use pip to install the dependencies inside the container.
+container_run_and_commit(
+    name = "python3.8.3_base_image_with_deps",
+    image = "python3.8.3_base_image.tar",
+    commands = [
+        "pip3 install --default-timeout=180 -r /etc/requirements.txt",
+    ],
+)
+
 py3_image(
     name = "main_image",
     srcs = ["main.py"],
     main = "main.py",
-    deps = [requirement("psycopg2-binary")],
 
-    base = ":python3.8.3_base_image",
+    # Internal dependencies go here.
+    # External dependencies are handled by pip install in the container.
+    deps = [],
+
+    base = ":python3.8.3_base_image_with_deps",
 
     # Bazel injected init files can break python import.
     # https://github.com/bazelbuild/rules_python/issues/55

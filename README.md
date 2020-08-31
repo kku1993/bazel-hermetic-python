@@ -68,6 +68,8 @@ Successfully imported psycopg2-binary!
     - Modify the official image to create symlink to `/usr/local/bin/python`
       from `/usr/bin/python3`. This is for compatibility with "host" python
       toolchain (see below).
+    - Install external dependencies using `pip` (or any other tool) inside the
+      container image to ensure python version matches.
     - Use the fetched image as base for
       [`py3_image`](https://github.com/bazelbuild/rules_docker#py3_image) rule
       since `py3_image` defaults to something like `python3.5` from
