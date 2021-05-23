@@ -21,7 +21,9 @@ http_archive(
     patch_cmds = [
         "mkdir $(pwd)/bazel_install",
         _py_configure,
-        "make",
+        # Produce deterministic binary by using a fixed build timestamp and
+        # running `ar` in deterministic mode. See #7
+        "SOURCE_DATE_EPOCH=0 make -j $(nproc) ARFLAGS='rvD'",
         "make install",
         "ln -s bazel_install/bin/python3 python_bin",
     ],

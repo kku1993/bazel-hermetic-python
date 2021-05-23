@@ -14,10 +14,13 @@ def cmd(args):
 
 
 if __name__ == "__main__":
-    print("Bazel python executable is", sys.executable)
-    print("Bazel python version is", platform.python_version())
+    print("=== Bazel Python ===")
+    print(sys.executable)
+    print(sys.version)
 
-    print("Host python executable is", cmd(["which", "python3"]))
-    print("Host python version is", cmd(["python3", "-c", "import platform; print(platform.python_version())"]))
+    print("=== Host Python ===")
+    print(cmd(["which", "python3"]))
+    print(cmd(["python3", "-c", "import sys; print(sys.version)"]))
 
+    print("=== Pip Package ===")
     print("Successfully imported psycopg2-binary!")

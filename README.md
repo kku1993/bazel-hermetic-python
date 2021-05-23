@@ -22,10 +22,15 @@ Environment:
 
 ```shell
 $ bazel run //:main
-Bazel python executable is /home/kku/.cache/bazel/_bazel_kku/d727175bc5d0ccda8e0f97f510a8a329/execroot/py_test/bazel-out/k8-fastbuild/bin/main.runfiles/python_interpreter/python_bin
-Bazel python version is 3.8.3
-Host python executable is /usr/bin/python3
-Host python version is 3.6.9
+=== Bazel Python ===
+/home/kku/.cache/bazel/_bazel_kku/8646bea57e4c755fe6c60a8ab13b2451/execroot/py_test/bazel-out/k8-fastbuild/bin/main.runfiles/python_interpreter/python_bin
+3.8.3 (default, Jan  1 1970, 00:00:00)
+[GCC 9.3.0]
+=== Host Python ===
+/usr/bin/python3
+3.8.5 (default, Jan 27 2021, 15:41:15)
+[GCC 9.3.0]
+=== Pip Package ===
 Successfully imported psycopg2-binary!
 ```
 
