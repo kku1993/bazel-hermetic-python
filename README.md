@@ -17,7 +17,7 @@ in bazel as a toolchain.
 Environment:
 - Ubuntu 18.04.4
 - Bazel version: 2.2.0
-- Host python3 version: 3.6.9
+- Host python3 version: 3.8.5
 - Custom python3 version (from WORKSPACE): 3.8.3
 
 ```shell
