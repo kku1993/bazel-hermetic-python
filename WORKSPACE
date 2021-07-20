@@ -16,6 +16,22 @@ else
 fi
 """.format(BUILD_DIR)
 
+# Produce deterministic binary by using a fixed build timestamp and
+# running `ar` in deterministic mode. See #7
+#
+# The 'D' modifier is known to be not available on macos. For linux
+# distributions, we check for its existence. Note that it should be the default
+# on most distributions since binutils is commonly compiled with
+# --enable-deterministic-archives. See #9
+_ar_flags = """
+ar 2>&1 >/dev/null | grep '\\[D\\]'
+if [ "$?" -eq "0" ]; then
+  cd {0} && echo -n 'rvD' > arflags.f527268b.txt
+else
+  cd {0} && echo -n 'rv' > arflags.f527268b.txt
+fi
+""".format(BUILD_DIR)
+
 http_archive(
     name = "python_interpreter",
     urls = [
@@ -30,9 +46,8 @@ http_archive(
         "cp -r * {0}".format(BUILD_DIR),
         # Build python.
         _py_configure,
-        # Produce deterministic binary by using a fixed build timestamp and
-        # running `ar` in deterministic mode. See #7
-        "cd {0} && SOURCE_DATE_EPOCH=0 make -j $(nproc) ARFLAGS='rvD'".format(BUILD_DIR),
+        _ar_flags,
+        "cd {0} && SOURCE_DATE_EPOCH=0 make -j $(nproc) ARFLAGS=$(cat arflags.f527268b.txt)".format(BUILD_DIR),
         "cd {0} && make install".format(BUILD_DIR),
         # Copy the contents of the build directory back into bazel.
         "rm -rf * && mv {0}/* .".format(BUILD_DIR),
